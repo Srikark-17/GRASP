@@ -4,7 +4,7 @@ import { View, TextInput, StyleSheet, Platform } from "react-native";
 
 import colors from "../config/colors";
 
-function AppTextInput({ icon, width = "100%", ...otherProps }) {
+export default function AppTextInput({ icon, width = "100%", ...otherProps }) {
   return (
     <View style={[styles.container, { width }]}>
       <TextInput
@@ -33,6 +33,4 @@ const styles = StyleSheet.create({
     color: "#798497",
     flex: 1,
   },
-});
-
-export default AppTextInput;
+})

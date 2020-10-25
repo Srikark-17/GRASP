@@ -12,27 +12,34 @@ if (!firebase.apps.length) {
 }
 
 export default function App({navigation}) {
-  const [loading, setLoading] = useState(true); // Set loading to true on component mount
-  const [users, setUsers] = useState([]); // Initial empty array of users
+  const [users, setUsers] = useState([]); 
+  const [threads, setThreads] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const subscriber = firebase.firestore()
-      .collection('Lectures')
-      .onSnapshot(querySnapshot => {
-        const users = [];
-        querySnapshot.forEach(documentSnapshot => {
-          users.push({
+    const unsubscribe = firebase.firestore()
+      .collection('THREADS')
+      .onSnapshot((querySnapshot) => {
+        const threads = querySnapshot.docs.map((documentSnapshot) => {
+          return {
+            _id: documentSnapshot.id,
+            // give defaults
+            name: '',
             ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+          };
         });
-  
-        setUsers(users);
-        setLoading(false);
+
+        setThreads(threads);
+
+        if (loading) {
+          setLoading(false);
+        }
       });
-  
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
+
+    /**
+     * unsubscribe listener
+     */
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
@@ -42,21 +49,23 @@ export default function App({navigation}) {
     <View style={styles.container}>
       <Text style={styles.title}>Discussions</Text>
       <TextInput style={styles.searchBar} placeholder="Search discussions" placeholderTextColor="#798497" />
-        <View style={styles.noteContainer}>
-
-          <Button color={"#8B8B8B"} title="LOGARITHMS - CHANGE OF..." numberOfLines = { 1 } style={styles.buttonText} onPress={() => {navigation.navigate('Audio', {
-            docName: item.title,
-          });}} />
-          <TouchableOpacity styles={styles.trash}>
+        <FlatList
+          data={threads}
+          keyExtractor={item => item._id}
+          renderItem={({ item }) => (
+            <View style={styles.noteContainer}>
+            <Button color={"#8B8B8B"} title={item.name} numberOfLines = { 3 } style={styles.buttonText} onPress={() => {navigation.navigate('Chat Room', {thread: item })}} />
+            <TouchableOpacity styles={styles.trash} onPress={() => navigation.navigate('Chat Room', { thread: item })}>
             </TouchableOpacity>
-            <TouchableOpacity><MaterialIcons style={styles.people} name="people" size={25} /></TouchableOpacity>
+            <TouchableOpacity><MaterialIcons style={styles.people} name="people" size={20} /></TouchableOpacity>
             <Text style={styles.one}>0</Text>
             <Text style={styles.two}>0</Text>
-            <TouchableOpacity><Entypo style={styles.message} name="chat" size={25} /></TouchableOpacity>
-            <TouchableOpacity><Entypo style={styles.add} name="add-to-list" size={25} /></TouchableOpacity>
-        </View>
+            <TouchableOpacity><Entypo style={styles.message} name="chat" size={20} /></TouchableOpacity>
+            </View>
+          )}
+        />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={()=> navigation.navigate('Start Lecture')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Add Discussion')}>
           <View style={styles.addNoteContainer}>
             <AntDesign style={styles.addNote} name="plus" size={35} />
           </View>
@@ -94,10 +103,9 @@ const styles = StyleSheet.create({
     borderColor: "#47BD77",
     textAlign: "left",
     backgroundColor: "#2B2D2F",
-    color: "#798497",
     fontWeight: "bold",
     top: 100,
-    paddingLeft: 15
+    paddingLeft: 15,
   },
   buttonText: {
     fontFamily: "Avenir",
@@ -202,7 +210,7 @@ const styles = StyleSheet.create({
     paddingRight: 50,
     backgroundColor: "#2B2D2F",
     borderRadius: 10,
-    marginBottom: 100,
+    marginBottom: 30,
     width: 350,
     textAlign: "left"
   },

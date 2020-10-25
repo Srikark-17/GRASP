@@ -5,6 +5,7 @@ import Firebasekeys from "../../config";
 import * as firebase from "firebase";
 import "firebase/firestore";
 
+import { Form, FormField, SubmitButton } from "../../components/forms";
 let firebaseConfig = Firebasekeys;
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -41,10 +42,10 @@ export default function App({navigation}) {
     <View style={styles.container}>
       <Text style={styles.title}>Enter Your Question</Text>
       <TextInput style={styles.searchBar} placeholder="Type your question" placeholderTextColor="#798497" />
-      <Text style={styles.exampleText}>Example Questions:</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Problem Results', {computedText:'', typeofValue: false})}><Text style={styles.exampleText}>Example Questions:</Text></TouchableOpacity>
         <View style={styles.noteContainer}>
 
-          <Button color={"#8B8B8B"} title={"What is the solution to x if x is an integer below 15 but satisifes the..."} onPress={() => {navigation.navigate('Audio', {
+          <Button color={"#798497"} title={"What is the solution to x if x is an integer below 15 but satisifes the..."} onPress={() => {navigation.navigate('Audio', {
           });}} />
           <TouchableOpacity styles={styles.trash} onPress={() =>
             Alert.alert(
@@ -108,13 +109,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     top: 100,
     paddingLeft: 15,
-    color: "#798497"
+    color: "#798497",
   },
   exampleText: {
       top: 125,
       fontFamily: "Avenir",
       fontSize: 20,
       color: "#A8A8A8"
+      
   },
   buttonText: {
     fontFamily: "Avenir",
@@ -210,12 +212,12 @@ const styles = StyleSheet.create({
   noteContainer: {
     top: 150,
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 40,
     paddingLeft: 20,
     paddingRight: 50,
-    backgroundColor: "#ECECEC",
+    backgroundColor: "#2B2D2F",
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 100,
     width: 350,
     textAlign: "left"
   },

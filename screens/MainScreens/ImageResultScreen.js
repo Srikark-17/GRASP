@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native'
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from "react-native";
 import Firebasekeys from "../../config";
 import * as firebase from "firebase";
 import "firebase/firestore";
@@ -9,11 +9,13 @@ let firebaseConfig = Firebasekeys;
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-
-export default function App({navigation}) {
+const inactiveColor = '#8E8E8E'
+const themecolor = '#2B2D2F'
+const tabcolor = '#47BD77'
+export default function App({navigation, route}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [users, setUsers] = useState([]); // Initial empty array of users
-
+  const {computedText, typeofValue} = route.params
   useEffect(() => {
     const subscriber = firebase.firestore()
       .collection('Lectures')
@@ -37,25 +39,31 @@ export default function App({navigation}) {
   if (loading) {
     return <ActivityIndicator />;
   }
+  console.log('http://api.wolframalpha.com/v1/simple?appid=6H253Q-YUP5Q62A8Q&i=' + encodeURI(computedText))
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Problem Results</Text>
       <Text style={styles.subtitle}>Showing results for</Text>
+      <ScrollView style={{height: 200, top: 50}}>
       <Image
-          source={require("./../../assets/result.png")}
-          style={{ top: 55, }}
-        />
+            source={(typeofValue ? { uri: 'http://api.wolframalpha.com/v1/simple?appid=6H253Q-YUP5Q62A8Q&i=' + encodeURI(computedText)} : {uri: 'http://api.wolframalpha.com/v1/simple?appid=6H253Q-YUP5Q62A8Q&i=' + encodeURI('periodic table')})}
+            style={{ top: 55, backgroundColor: `#fff`, width: 400, height:500, borderRadius: 1 }}
+
+  resizeMode="contain"
+          />
+          
+        </ScrollView>
         <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.picture}
-          onPress={() => navigation.navigate("Option Navigation")}
+          onPress={() => navigation.navigate("Archived Problems")}
         >
           <Image style={styles.brain} source={require("./../../assets/icons8-archive-folder-96.png")}/>
           <Text style={styles.buttonText1}>Store Problem</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.lecture}
-          onPress={() => navigation.navigate("Discussions")}
+          onPress={() => navigation.navigate("Option Navigation")}
         >
           <Image style={styles.brain} source={require("./../../assets/icons8-critical-thinking-96.png")}/>
           <Text style={styles.buttonText2}>Solve Problem</Text>

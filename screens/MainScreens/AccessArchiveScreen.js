@@ -41,10 +41,12 @@ export default function App({navigation}) {
     <View style={styles.container}>
       <Text style={styles.title}>Access Archive</Text>
       <Text style={styles.subtitle}>Archiving results for</Text>
-      <ScrollView style={{ width: 332, height: 100}}>
-        <Image
-            source={require("./../../assets/result.png")}
-            style={{ top: 75,}}
+      <ScrollView style={{ height: 100}}>
+      <Image
+            source={({uri: 'http://api.wolframalpha.com/v1/simple?appid=6H253Q-YUP5Q62A8Q&i=' + encodeURI('periodic table')})}
+            style={{ top: 55, backgroundColor: `#fff`, width: 400, height:500, borderRadius: 1 }}
+
+  resizeMode="contain"
           />
         </ScrollView>
     </View>
