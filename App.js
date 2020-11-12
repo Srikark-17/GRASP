@@ -9,14 +9,13 @@ import {MaterialIcons ,Ionicons, Octicons, Entypo, MaterialCommunityIcons, FontA
 import SelectLectureScreen from "./screens/MainScreens/SelectLectureScreen";
 
 import ExportDetectedTextScreen from "./screens/MainScreens/ExportDetectedTextScreen";
-import MyNotesAddImageScreen from "./screens/MainScreens/MyNotesAddImageNotesScreen";
 import DiscussionsScreen from './screens/MainScreens/DiscussionsScreen'
 import AccessArchiveScreen from './screens/MainScreens/AccessArchiveScreen'
 import ManualInputScreen from './screens/MainScreens/NewQuestionScreen'
 import ProblemSolverNavigator from './screens/MainScreens/OptionsScreen'
 // import MyNotesDetectedTextScreen from "./screens/MainScreens/MyNotesDetectedText";
 import AudioNotesScreen from "./screens/MainScreens/AudioNotesScreen";
-import ImageNotesScreen from "./screens/MainScreens/CameraScreen";
+// import ImageNotesScreen from "./screens/MainScreens/CameraScreen";
 import SplashScreen from "./screens/AuthScreens/SplashScreen";
 import LoginScreen from "./screens/AuthScreens/TestLoginScreen";
 import RegisterScreen from "./screens/AuthScreens/TestRegisterScreen";
@@ -24,13 +23,12 @@ import OptionsScreen from "./screens/MainScreens/OptionsScreen";
 import NewQuestionScreen from "./screens/MainScreens/NewQuestionScreen";
 import Firebasekeys from "./config";
 import * as firebase from "firebase";
-
+import AddRoomScreen from './screens/MainScreens/AddRoomScreen'
 import ImageResultScreen from "./screens/MainScreens/ImageResultScreen";
 import ExportDetectedText from "./screens/MainScreens/MyNotesDetectedText";
 import ProblemsScreen from "./screens/MainScreens/ProblemsScreen"
-
+import ChatRoom from './screens/MainScreens/RoomScreen'
 import "firebase/firestore";
-import CameraScreen from "./screens/MainScreens/MyNotesAddImageNotesScreen";
 
 let firebaseConfig = Firebasekeys;
 if (!firebase.apps.length) {
@@ -44,12 +42,55 @@ const Tab = createMaterialBottomTabNavigator();
 const Auth = createStackNavigator();
 const Home = createStackNavigator();
 const Image = createStackNavigator();
+const Discussions = createStackNavigator()
+const ChatRoomScreen = ({}) => {
+  return(
+  <Discussions.Navigator
+  screenOptions={{
+    headerTintColor: `${tabcolor}}`
+  }}>
+    <Discussions.Screen name="Chat Room Home" component={ChatRoom}
+    options={{
+          title: 'Chat Room',
+          headerStyle: {
+            backgroundColor: `${themecolor}`
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: '#fff'
+          },
+          headerBackTitleStyle: {
+            color: `${inactiveColor}`
+          },
+          headerTintColor: `${inactiveColor}`,
+        }}/>
+  </Discussions.Navigator>
+  )
+}
 
+const DiscussionsNavigator = ({}) => {
+  return (
+    <Discussions.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+
+      initialRouteName="Discussions Home"
+    >
+
+      <Discussions.Screen name="Discussions Home" component={DiscussionsScreen} />
+      <Discussions.Screen name="Add Discussion" component={AddRoomScreen} />
+      <Discussions.Screen name="Chat Room" component={ChatRoomScreen} />
+    </Discussions.Navigator>
+  );
+}
 const ArchiveNavigator = ({ navigation }) => {
   return (
     <Home.Navigator
       screenOptions={{
         headerShown: false,
+        
       }}
 
       initialRouteName="Select Lecture"
@@ -61,10 +102,10 @@ const ArchiveNavigator = ({ navigation }) => {
       <Home.Screen name="Select Lecture" component={SelectLectureScreen} />
 
       <Home.Screen name="Start Lecture" component={StartLectureScreen} />
-      <Home.Screen
+      {/* <Home.Screen
         name="My Notes Add Image"
         component={MyNotesAddImageScreen}
-      />
+      /> */}
       {/* <Home.Screen
         name="My Notes Add Image Notes"
         component={MyNotesAddImageNotesScreen}
@@ -97,8 +138,8 @@ const ImageNavigator = ({ navigation }) => {
         component={ProblemSolverNavigator}
       />
       <Image.Screen name="Manual Input" component={ManualInputScreen} />
-
-      <Image.Screen name="Image Input" component={CameraScreen} />
+{/* 
+      <Image.Screen name="Image Input" component={CameraScreen} /> */}
       <Image.Screen
         name="Problem Results"
         component={ImageResultScreen}
@@ -124,16 +165,17 @@ function MainTabs(){
           activeColor={tabcolor}
           inactiveColor={inactiveColor}
           barStyle={{ backgroundColor: `${themecolor}`, bottomPadding: 10}}
-          shifting={true}
+          shifting={false}
         >
-          <Tab.Screen name="Problem Calculator" component={RegisterScreen} 
+          <Tab.Screen name="Problem Calculator" component={ImageNavigator} 
           options={{
             tabBarIcon: ({focused}) => (
               <MaterialCommunityIcons name="calculator-variant" size={26}  color={(focused ? tabcolor: inactiveColor )}/>
             ),
+            
           }}
           />
-          <Tab.Screen name="Discussions" component={DiscussionsScreen} 
+          <Tab.Screen name="Discussions" component={DiscussionsNavigator} 
           options={{
             tabBarIcon: ({focused}) => (
               <Octicons name="comment-discussion" size={24} color={(focused ? tabcolor: inactiveColor )}/>

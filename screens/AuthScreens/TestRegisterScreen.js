@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   haveAccountText: {
-    color: "#2D3748",
+    color: "#798497",
   },
   loginText: {
     color: "#3D8AFF",
